@@ -1,0 +1,6 @@
+fixtures:
+  repositories:
+    mysql: https://github.com/camptocamp/puppet-mysql.git
+    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib.git
+  symlinks:
+    backup: "#{source_dir}"
