@@ -18,9 +18,9 @@
 #   day of the week.
 #
 class backup::mysql(
-  $data_dir               = pick($::mysql::params::data_dir, '/var/lib/mysql'),
-  $backup_dir             = pick($::mysql::params::backup_dir, '/var/backups/mysql'),
-  $mysqldump_retention    = pick($mysqldump_retention, 'week'),
+  $data_dir               = pick($::mysql::server::data_dir, '/var/lib/mysql'),
+  $backup_dir             = pick($::mysql::server::backup_dir, '/var/backups/mysql'),
+  $mysqldump_retention    = 'week',
   $mysqldump_options      = '--all-database --extended-insert',
   $mysql_post_backup_hook = '',
 ) inherits mysql::params {
