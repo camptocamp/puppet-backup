@@ -51,7 +51,7 @@ class backup::postgresql (
     owner   => $user,
     group   => $user,
     mode    => '0755',
-    require => [Package['postgresql-server'], User[$user]],
+    require => [Package['postgresql-server']],
   }
 
   case $ensure {
@@ -97,7 +97,7 @@ class backup::postgresql (
     user    => $user,
     hour    => $cron_hour,
     minute  => $cron_minute,
-    require => [User[$user], File['/usr/local/bin/pgsql-backup.sh']],
+    require => [File['/usr/local/bin/pgsql-backup.sh']],
   }
 
 }
