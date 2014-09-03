@@ -29,7 +29,7 @@
 #
 # === Examples
 #
-#   include generic_tmpl::os::backup::postgresql
+#   include profiles_common::os::backup::postgresql
 #
 class backup::postgresql (
   $ensure        = present,
