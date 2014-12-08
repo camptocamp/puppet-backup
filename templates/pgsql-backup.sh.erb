@@ -5,6 +5,9 @@ BKPFMT="<%= @backup_format %>"
 TODAY=$(date +%F)
 DAY=$(date +%A |tr 'A-Z' 'a-z')
 MONTH=$(date +%B |tr 'A-Z' 'a-z')
+PG_CONFIG=$(psql -Atc "SHOW config_file")
+PG_CONFIG_EXTRA=$(dirname $PG_CONFIG)/postgresql_puppet_extras.conf
+PG_HBA=$(psql -Atc "SHOW hba_file")
 TMPDIR=$(mktemp -d -p $BKPDIR) || exit 1
 export PGOPTIONS='-c statement_timeout=0'
 
@@ -14,6 +17,10 @@ for i in `psql -U postgres -c "select datname from pg_database where datname <> 
     do
         pg_dump -U postgres --format=$BKPFMT --create $i |bzip2  > $TMPDIR/$i.$TODAY.dump.bz
     done
+
+# copy main configurations in backup archive
+cp $PG_CONFIG $PG_HBA $TMPDIR
+test -f $PG_CONFIG_EXTRA && cp $PG_CONFIG_EXTRA $TMPDIR
 
 test -f $BKPDIR/pgsql_$DAY.tar.gz && rm $BKPDIR/pgsql_$DAY.tar.gz
 tar -C $TMPDIR -c -f $BKPDIR/pgsql_$DAY.tar `ls $TMPDIR`
