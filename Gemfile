@@ -2,14 +2,11 @@ source ENV['GEM_SOURCE'] || "https://rubygems.org"
 
 group :development, :test do
   gem 'rake',                    :require => false
-  gem 'rspec-puppet',            :require => false
+  gem 'rspec-puppet',            :require => false, :git => 'https://github.com/camptocamp/rspec-puppet.git', :branch => 'future-no-import'
   gem 'puppetlabs_spec_helper',  :require => false
-  gem 'serverspec',              :require => false
   gem 'puppet-lint',             :require => false
-  gem 'beaker',                  :require => false
-  gem 'beaker-rspec',            :require => false
-  gem 'pry',                     :require => false
-  gem 'simplecov',               :require => false
+  gem 'metadata-json-lint',      :require => false
+  gem 'puppet_facts',            :require => false, :git => 'https://github.com/camptocamp/puppet_facts.git'
 end
 
 if facterversion = ENV['FACTER_GEM_VERSION']
