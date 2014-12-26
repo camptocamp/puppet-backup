@@ -23,7 +23,7 @@ class backup::mysql(
   $mysqldump_retention    = 'week',
   $mysqldump_options      = '--all-database --extended-insert',
   $mysql_post_backup_hook = '',
-) inherits mysql::params {
+) {
 
   ensure_resource(
     'group',
