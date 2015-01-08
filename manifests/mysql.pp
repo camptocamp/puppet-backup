@@ -20,10 +20,15 @@
 class backup::mysql(
   $data_dir               = pick($::mysql::server::data_dir, '/var/lib/mysql'),
   $backup_dir             = pick($::mysql::server::backup_dir, '/var/backups/mysql'),
+  $cron_hour              = '2',
+  $cron_minute            = '0',
   $mysqldump_retention    = 'week',
   $mysqldump_options      = '--all-database --extended-insert',
   $mysql_post_backup_hook = undef,
 ) {
+
+  validate_re( $cron_hour, '^\d+$' )
+  validate_re( $cron_minute, '^\d+$' )
 
   ensure_resource(
     'group',
@@ -53,8 +58,8 @@ class backup::mysql(
   cron {'mysql-backup':
     command => "/usr/local/bin/mysql-backup.sh ${mysqldump_retention}",
     user    => 'root',
-    hour    => 2,
-    minute  => 0,
+    hour    => $cron_hour,
+    minute  => $cron_minute,
     require => [File[$backup_dir], File['/usr/local/bin/mysql-backup.sh']],
   }
 
