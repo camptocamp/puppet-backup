@@ -22,7 +22,7 @@ class backup::mysql(
   $backup_dir             = pick($::mysql::server::backup_dir, '/var/backups/mysql'),
   $mysqldump_retention    = 'week',
   $mysqldump_options      = '--all-database --extended-insert',
-  $mysql_post_backup_hook = '',
+  $mysql_post_backup_hook = undef,
 ) {
 
   ensure_resource(
