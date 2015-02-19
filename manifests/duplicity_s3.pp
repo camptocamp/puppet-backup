@@ -19,7 +19,7 @@ class backup::duplicity_s3 (
   }
 
   file {'/root/.gnupg/secring.gpg':
-    ensure => present,
+    ensure => file,
     owner  => 'root',
     group  => 'root',
     mode   => '0600',

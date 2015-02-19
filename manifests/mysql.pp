@@ -48,7 +48,7 @@ class backup::mysql(
   }
 
   file {'/usr/local/bin/mysql-backup.sh':
-    ensure  => present,
+    ensure  => file,
     content => template('backup/mysql-backup.sh.erb'),
     owner   => 'root',
     group   => 'root',
