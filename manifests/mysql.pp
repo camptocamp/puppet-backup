@@ -19,7 +19,7 @@
 #
 class backup::mysql(
   $data_dir               = $::mysql::server::options['mysqld']['datadir'],
-  $backup_dir             = pick($::mysql::server::backup_dir, '/var/backups/mysql'),
+  $backup_dir             = '/var/backups/mysql',
   $cron_hour              = '2',
   $cron_minute            = '0',
   $mysqldump_retention    = 'week',
