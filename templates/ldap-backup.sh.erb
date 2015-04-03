@@ -1,0 +1,20 @@
+#!/bin/sh
+
+BKPDIR="<%= @backup_dir %>"
+TODAY=$(date +%F)
+DAY=$(date +%A |tr 'A-Z' 'a-z')
+MONTH=$(date +%B |tr 'A-Z' 'a-z')
+TMPDIR=$(mktemp -d -p $BKPDIR) || exit 1
+
+/usr/sbin/slapcat -b cn=config > $TMPDIR/config.ldif
+/usr/sbin/slapcat > $TMPDIR/data.ldif
+
+test -f $BKPDIR/ldap_$DAY.tar.gz && rm $BKPDIR/ldap_$DAY.tar.gz
+tar -C $TMPDIR -c -f $BKPDIR/ldap_$DAY.tar `ls $TMPDIR`
+rm -fr $TMPDIR
+
+if [ $(date +%d) = "01" ]; then
+    test -f $BKPDIR/ldap_$MONTH.tar.gz && rm $BKPDIR/ldap_$MONTH.tar.gz
+    cp $BKPDIR/ldap_$DAY.tar $BKPDIR/ldap_$MONTH.tar
+fi
+
