@@ -1,5 +1,5 @@
 class backup::ldap(
-  $backup_dir  = '/var/backup/ldap',
+  $backup_dir  = '/var/backups/ldap',
   $cron_hour   = 2,
   $cron_minute = 0,
 ) {
