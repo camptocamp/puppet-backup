@@ -21,7 +21,7 @@ class backup::ldap(
   } ->
   cron { 'ldap-backup':
     ensure  => present,
-    command => '/usr/local/bin/ldap-backup.sh'
+    command => '/usr/local/bin/ldap-backup.sh',
     hour    => $cron_hour,
     minute  => $cron_minute,
   }
