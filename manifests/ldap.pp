@@ -6,7 +6,7 @@ class backup::ldap(
   validate_absolute_path($backup_dir)
 
   file { $backup_dir:
-    ensure => directory
+    ensure => directory,
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
