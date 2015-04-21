@@ -9,14 +9,19 @@ PG_CONFIG=$(psql -Atc "SHOW config_file")
 PG_CONFIG_EXTRA=$(dirname $PG_CONFIG)/postgresql_puppet_extras.conf
 PG_HBA=$(psql -Atc "SHOW hba_file")
 TMPDIR=$(mktemp -d -p $BKPDIR) || exit 1
+<% if !@databases.empty? -%>
+DATABASES="<%= @databases.join(" ") %>"
+<% else -%>
+DATABASES=$(psql -tc "SELECT datname FROM pg_database WHERE datistemplate = false")
+<% end -%>
+
 export PGOPTIONS='-c statement_timeout=0'
 
 pg_dumpall -U postgres --globals-only |bzip2 > $TMPDIR/ACCOUNT-OBJECTS.$TODAY.dump.bz
 
-for i in `psql -U postgres -c "select datname from pg_database where datname <> 'template0'" -t template1`
-    do
-        pg_dump -U postgres --format=$BKPFMT --create $i |bzip2  > $TMPDIR/$i.$TODAY.dump.bz
-    done
+for i in $DATABASES; do
+  pg_dump -U postgres --format=$BKPFMT --create $i |bzip2  > $TMPDIR/$i.$TODAY.dump.bz
+done
 
 # copy main configurations in backup archive
 cp $PG_CONFIG $PG_HBA $TMPDIR
