@@ -27,6 +27,10 @@
 #   The user to use to perform the backup.
 #   Defaults to postgres.
 #
+# [*databases*]
+#   List of databases to dump.
+#   If not defined (an empty array), all databases are dumped
+#
 # === Examples
 #
 #   include profiles_common::os::backup::postgresql
@@ -36,6 +40,7 @@ class backup::postgresql (
   $backup_dir    = '/var/backups/pgsql',
   $backup_format = 'plain',
   $user          = 'postgres',
+  $databases     = [],
   $cron_hour     = 2,
   $cron_minute   = 0,
 ) {
@@ -46,6 +51,7 @@ class backup::postgresql (
     ['^present$', '^absent$', '^purged$'],
     "Unknown value ${ensure} for ${name}"
   )
+  validate_array($databases)
 
   file {$backup_dir:
     owner   => $user,
