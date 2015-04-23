@@ -31,6 +31,11 @@
 #   List of databases to dump.
 #   If not defined (an empty array), all databases are dumped
 #
+# [*hotstandby*]
+#   Boolean telling we're on a hot-standby host or not.
+#   Default to false.
+#   More information: http://dba.stackexchange.com/a/30639
+#
 # === Examples
 #
 #   include profiles_common::os::backup::postgresql
@@ -39,6 +44,7 @@ class backup::postgresql (
   $ensure        = present,
   $backup_dir    = '/var/backups/pgsql',
   $backup_format = 'plain',
+  $hotstandby    = false,
   $user          = 'postgres',
   $databases     = [],
   $cron_hour     = 2,
