@@ -1,6 +1,6 @@
 fixtures:
-  repositories:
-    mysql: https://github.com/camptocamp/puppet-mysql.git
-    stdlib: https://github.com/puppetlabs/puppetlabs-stdlib.git
+  forge_modules:
+    mysql: 'puppetlabs-mysql'
+    stdlib: 'puppetlabs-stdlib'
   symlinks:
     backup: "#{source_dir}"
