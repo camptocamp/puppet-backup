@@ -1,39 +1,45 @@
 #!/bin/sh
 
+<% if @container -%>
+PREFIX="docker exec <%= @container %> "
+USER="-U <%= @user %>"
+<% end -%>
 BKPDIR="<%= @backup_dir %>"
 BKPFMT="<%= @backup_format %>"
 TODAY=$(date +%F)
 DAY=$(date +%A |tr 'A-Z' 'a-z')
 MONTH=$(date +%B |tr 'A-Z' 'a-z')
-PG_CONFIG=$(psql -Atc "SHOW config_file")
-PG_CONFIG_EXTRA=$(dirname $PG_CONFIG)/postgresql_puppet_extras.conf
-PG_HBA=$(psql -Atc "SHOW hba_file")
 TMPDIR=$(mktemp -d -p $BKPDIR) || exit 1
 <% if !@databases.empty? -%>
 DATABASES="<%= @databases.join(" ") %>"
 <% else -%>
-DATABASES=$(psql -tc "SELECT datname FROM pg_database WHERE datistemplate = false")
+DATABASES=$(${PREFIX}psql ${USER} -tc "SELECT datname FROM pg_database WHERE datistemplate = false")
 <% end -%>
 
 export PGOPTIONS='-c statement_timeout=0'
 
 <% if @hotstandby -%>
-psql -c "SELECT pg_xlog_replay_pause();" -d template1
+${PREFIX}psql ${USER} -c "SELECT pg_xlog_replay_pause();" -d template1
 <% end -%>
 
-pg_dumpall -U postgres --globals-only |bzip2 > $TMPDIR/ACCOUNT-OBJECTS.$TODAY.dump.bz
+${PREFIX}pg_dumpall -U postgres --globals-only |bzip2 > $TMPDIR/ACCOUNT-OBJECTS.$TODAY.dump.bz
 
 for i in $DATABASES; do
-  pg_dump -U postgres --format=$BKPFMT --create $i |bzip2  > $TMPDIR/$i.$TODAY.dump.bz
+  ${PREFIX}pg_dump -U postgres --format=$BKPFMT --create $i |bzip2  > $TMPDIR/$i.$TODAY.dump.bz
 done
 
 <% if @hotstandby -%>
-psql -c "SELECT pg_xlog_replay_resume();" -d template1
+${PREFIX}psql ${USER} -c "SELECT pg_xlog_replay_resume();" -d template1
 <% end -%>
 
+<% unless @container -%>
 # copy main configurations in backup archive
+PG_CONFIG=$(psql -Atc "SHOW config_file")
+PG_CONFIG_EXTRA=$(dirname $PG_CONFIG)/postgresql_puppet_extras.conf
+PG_HBA=$(psql -Atc "SHOW hba_file")
 cp $PG_CONFIG $PG_HBA $TMPDIR
 test -f $PG_CONFIG_EXTRA && cp $PG_CONFIG_EXTRA $TMPDIR
+<% end -%>
 
 test -f $BKPDIR/pgsql_$DAY.tar.gz && rm $BKPDIR/pgsql_$DAY.tar.gz
 tar -C $TMPDIR -c -f $BKPDIR/pgsql_$DAY.tar `ls $TMPDIR`
