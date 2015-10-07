@@ -49,6 +49,7 @@ class backup::postgresql (
   $databases     = [],
   $cron_hour     = 2,
   $cron_minute   = 0,
+  $container     = undef,
 ) {
 
   validate_absolute_path($backup_dir)
@@ -59,11 +60,20 @@ class backup::postgresql (
   )
   validate_array($databases)
 
+  $_user = $container ? {
+    undef   => $user,
+    default => undef,
+  }
+
+  $require = $container ? {
+    undef   => Package['postgresql-server'],
+    default => undef,
+  }
   file {$backup_dir:
-    owner   => $user,
-    group   => $user,
+    owner   => $_user,
+    group   => $_user,
     mode    => '0755',
-    require => [Package['postgresql-server']],
+    require => $require,
   }
 
   case $ensure {
@@ -106,7 +116,7 @@ class backup::postgresql (
   cron { 'pgsql-backup':
     ensure  => $cron_ensure,
     command => '/usr/local/bin/pgsql-backup.sh',
-    user    => $user,
+    user    => $_user,
     hour    => $cron_hour,
     minute  => $cron_minute,
     require => [File['/usr/local/bin/pgsql-backup.sh']],
