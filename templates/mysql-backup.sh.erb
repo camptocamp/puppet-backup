@@ -2,7 +2,7 @@
 # file managed by puppet
 
 usage() {
-  echo "Usage: $0 (week|month [number]|year)"
+  echo "Usage: $0 (day|week|month [number]|year)"
   exit 1
 }
 
@@ -21,6 +21,9 @@ then
 fi
 
 case "$1" in
+  day)
+    DAY=daily
+    ;;
   week)
     DAY=$(date +%A |tr 'A-Z' 'a-z')
     ;;
