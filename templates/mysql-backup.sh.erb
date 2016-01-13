@@ -22,7 +22,7 @@ fi
 
 case "$1" in
   week)
-    DAY=$(date +%A |tr 'A-Z' 'a-z')
+    DAY=$(LC_TIME= date +%A |tr 'A-Z' 'a-z')
     ;;
   month)
     DAY=$(date +%d)

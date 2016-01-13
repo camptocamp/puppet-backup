@@ -7,8 +7,8 @@ USER="-U <%= @user %>"
 BKPDIR="<%= @backup_dir %>"
 BKPFMT="<%= @backup_format %>"
 TODAY=$(date +%F)
-DAY=$(date +%A |tr 'A-Z' 'a-z')
-MONTH=$(date +%B |tr 'A-Z' 'a-z')
+DAY=$(LC_TIME= date +%A |tr 'A-Z' 'a-z')
+MONTH=$(LC_TIME= date +%B |tr 'A-Z' 'a-z')
 TMPDIR=$(mktemp -d -p $BKPDIR) || exit 1
 <% if !@databases.empty? -%>
 DATABASES="<%= @databases.join(" ") %>"

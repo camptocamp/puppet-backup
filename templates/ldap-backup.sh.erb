@@ -2,8 +2,8 @@
 
 BKPDIR="<%= @backup_dir %>"
 TODAY=$(date +%F)
-DAY=$(date +%A |tr 'A-Z' 'a-z')
-MONTH=$(date +%B |tr 'A-Z' 'a-z')
+DAY=$(LC_TIME= date +%A |tr 'A-Z' 'a-z')
+MONTH=$(LC_TIME= date +%B |tr 'A-Z' 'a-z')
 TMPDIR=$(mktemp -d -p $BKPDIR) || exit 1
 
 /usr/sbin/slapcat -b cn=config > $TMPDIR/config.ldif
