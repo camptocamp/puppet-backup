@@ -9,6 +9,7 @@ BKPFMT="<%= @backup_format %>"
 TODAY=$(date +%F)
 DAY=$(LC_TIME= date +%A |tr 'A-Z' 'a-z')
 MONTH=$(LC_TIME= date +%B |tr 'A-Z' 'a-z')
+YEAR=$(LC_TIME= date +%Y)
 TMPDIR=$(mktemp -d -p $BKPDIR) || exit 1
 <% if !@databases.empty? -%>
 DATABASES="<%= @databases.join(" ") %>"
@@ -47,6 +48,10 @@ rm -fr $TMPDIR
 
 if [ $(date +%d) = "01" ]; then
     test -f $BKPDIR/pgsql_$MONTH.tar.gz && rm $BKPDIR/pgsql_$MONTH.tar.gz
+    <% if @yearly_month -%>
+      cp $BKPDIR/pgsql_$DAY.tar $BKPDIR/pgsql_${MONTH}_${YEAR}.tar
+    <% else -%>
     cp $BKPDIR/pgsql_$DAY.tar $BKPDIR/pgsql_$MONTH.tar
+    <% end -%>
 fi
 

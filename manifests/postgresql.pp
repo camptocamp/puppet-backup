@@ -36,6 +36,10 @@
 #   Default to false.
 #   More information: http://dba.stackexchange.com/a/30639
 #
+# [*yearly_month*]
+#   Boolean telling we want to suffix monthly backup with year.
+#   Default to false.
+#
 # === Examples
 #
 #   include profiles_common::os::backup::postgresql
@@ -50,6 +54,7 @@ class backup::postgresql (
   $cron_hour     = 2,
   $cron_minute   = 0,
   $container     = undef,
+  $yearly_month  = false
 ) {
 
   validate_absolute_path($backup_dir)
