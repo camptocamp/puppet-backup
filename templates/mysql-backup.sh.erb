@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 # file managed by puppet
 
 usage() {
@@ -77,3 +77,6 @@ else
   echo "mysqladmin/mysqldump missing. Are you sure this cron must run ?"
   exit 1
 fi
+
+# This witness' age will become the age of the last successful backup
+touch $BKPDIR/backup_done_witness
