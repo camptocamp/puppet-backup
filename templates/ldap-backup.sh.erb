@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 
 BKPDIR="<%= @backup_dir %>"
 TODAY=$(date +%F)
@@ -18,3 +18,5 @@ if [ $(date +%d) = "01" ]; then
     cp $BKPDIR/ldap_$DAY.tar $BKPDIR/ldap_$MONTH.tar
 fi
 
+# This witness' age will become the age of the last successful backup
+touch $BKPDIR/backup_done_witness
