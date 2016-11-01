@@ -56,4 +56,4 @@ if [ $(date +%d) = "01" ]; then
 fi
 
 # This witness' age will become the age of the last successful backup
-touch $BKPDIR/backup_done_witness
+echo `date` > $BKPDIR/backup_done_witness
