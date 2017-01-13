@@ -14,7 +14,7 @@ TMPDIR=$(mktemp -d -p $BKPDIR) || exit 1
 <% if !@databases.empty? -%>
 DATABASES="<%= @databases.join(" ") %>"
 <% else -%>
-DATABASES=$(${PREFIX}psql ${USER} -tc "SELECT datname FROM pg_database WHERE datistemplate = false")
+DATABASES=$(${PREFIX}psql ${USER} -Atc "SELECT datname FROM pg_database WHERE datistemplate = false"<%= @not_databases.map{|s| " | egrep -v ^#{s}$"}.join() %>)
 <% end -%>
 
 export PGOPTIONS='-c statement_timeout=0'
