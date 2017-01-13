@@ -31,6 +31,10 @@
 #   List of databases to dump.
 #   If not defined (an empty array), all databases are dumped
 #
+# [*not_databases*]
+#   List of databases _not_ to dump.
+#   This only applies if the *databases* parameter is not set.
+#
 # [*hotstandby*]
 #   Boolean telling we're on a hot-standby host or not.
 #   Default to false.
@@ -51,6 +55,7 @@ class backup::postgresql (
   $hotstandby    = false,
   $user          = 'postgres',
   $databases     = [],
+  $not_databases = [],
   $cron_hour     = 2,
   $cron_minute   = 0,
   $container     = undef,
@@ -64,6 +69,7 @@ class backup::postgresql (
     "Unknown value ${ensure} for ${name}"
   )
   validate_array($databases)
+  validate_array($not_databases)
 
   $_user = $container ? {
     undef   => $user,
