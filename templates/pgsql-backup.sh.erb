@@ -1,4 +1,4 @@
-#!/bin/sh -e
+#!/bin/bash -e
 
 <% if @container -%>
 PREFIX="docker exec <%= @container %> "
@@ -19,14 +19,24 @@ DATABASES=$(${PREFIX}psql ${USER} -Atc "SELECT datname FROM pg_database WHERE da
 
 export PGOPTIONS='-c statement_timeout=0'
 
+has_errors=0
+
 <% if @hotstandby -%>
 ${PREFIX}psql ${USER} -c "SELECT pg_xlog_replay_pause();" -d template1
 <% end -%>
 
 ${PREFIX}pg_dumpall -U postgres --globals-only |bzip2 > $TMPDIR/ACCOUNT-OBJECTS.$TODAY.dump.bz
+if [ ${PIPESTATUS[0]} -ne 0 ]; then
+  echo $(date) "FATAL: pg_dumpall --globals-only exit status not 0!" >> $BKPDIR/backup_failure
+  has_errors=1
+fi
 
 for i in $DATABASES; do
   ${PREFIX}pg_dump -U postgres --format=$BKPFMT --create $i |bzip2  > $TMPDIR/$i.$TODAY.dump.bz
+  if [ ${PIPESTATUS[0]} -ne 0 ]; then
+    echo $(date) "FATAL: pgdump exit status not 0 for database $i!" >> $BKPDIR/backup_failure
+    has_errors=1
+  fi
 done
 
 <% if @hotstandby -%>
@@ -56,4 +66,6 @@ if [ $(date +%d) = "01" ]; then
 fi
 
 # This witness' age will become the age of the last successful backup
-echo `date` > $BKPDIR/backup_done_witness
+if [ $has_errors -eq 0 ]; then
+  echo `date` > $BKPDIR/backup_done_witness
+fi
