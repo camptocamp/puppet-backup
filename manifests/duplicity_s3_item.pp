@@ -5,7 +5,7 @@ define backup::duplicity_s3_item (
 ) {
 
   $destination = $::backup::duplicity_s3::bucket_name ? {
-    /(^[a-z0-9\+]+:\/\/.*$)/ => $::backup::duplicity_s3::bucket_name,
+    /(^[a-z0-9\+]+:\/\/.*$)/ => "${::backup::duplicity_s3::bucket_name}/${name}",
     default               => "s3+http://${::backup::duplicity_s3::bucket_name}/${name}",
   }
 
