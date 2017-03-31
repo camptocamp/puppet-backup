@@ -18,8 +18,8 @@ class backup::ldap(
     group   => 'root',
     mode    => '0755',
     content => template('backup/ldap-backup.sh.erb'),
-  } ->
-  cron { 'ldap-backup':
+  }
+  -> cron { 'ldap-backup':
     ensure  => present,
     command => '/usr/local/bin/ldap-backup.sh',
     hour    => $cron_hour,
