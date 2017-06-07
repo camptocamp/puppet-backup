@@ -23,7 +23,7 @@ class backup::mysql(
   $cron_hour              = '2',
   $cron_minute            = '0',
   $mysqldump_retention    = 'week',
-  $mysqldump_options      = '--all-database --extended-insert',
+  $mysqldump_options      = '--all-databases --extended-insert',
   $mysql_post_backup_hook = undef,
 ) {
 
