@@ -1,0 +1,4 @@
+#!/bin/bash
+/usr/bin/mongodump --out <%= @backup_dir %> -u admin -p '<%= @mongo_admin_password %>' && touch <%= @backup_dir %>/witness
+
+<%= @mongo_post_backup %>
