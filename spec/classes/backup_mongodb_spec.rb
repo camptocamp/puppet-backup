@@ -4,6 +4,7 @@ describe 'backup::mongodb' do
   on_supported_os.each do |os, facts|
     let :params do
       {
+        :mongo_version => '4.0.6',
         :mongo_admin_password => 'foobar'
       }
     end
