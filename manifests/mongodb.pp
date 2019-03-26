@@ -18,6 +18,10 @@ class backup::mongodb(
     ensure => directory,
   }
 
+  file{"${backup_dir}/dump":
+    ensure => directory,
+  }
+
   file {'/usr/local/bin/mongodb-backup.sh':
     ensure  => file,
     content => template('backup/mongodb-backup.sh.erb'),
