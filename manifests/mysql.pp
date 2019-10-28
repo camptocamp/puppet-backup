@@ -56,7 +56,7 @@ class backup::mysql(
   }
 
   cron {'mysql-backup':
-    command => "/usr/local/bin/mysql-backup.sh ${mysqldump_retention}",
+    command => "/usr/local/bin/mysql-backup.sh ${mysqldump_retention} > ${backup_dir}/backup-logs-$(date '+%Y-%m-%d') 2&>1",
     user    => 'root',
     hour    => $cron_hour,
     minute  => $cron_minute,

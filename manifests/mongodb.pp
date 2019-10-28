@@ -31,7 +31,7 @@ class backup::mongodb(
   }
 
   cron {'mongodb backup':
-    command => '/usr/local/bin/mongodb-backup.sh',
+    command => '/usr/local/bin/mongodb-backup.sh > ${backup_dir}/backup-logs-$(date '+%Y-%m-%d') 2&>1',
     user    => 'root',
     minute  => '0',
     hour    => '3',
