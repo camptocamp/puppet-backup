@@ -45,5 +45,6 @@ class backup::mongodb(
     minute  => '0',
     hour    => '3',
   }
+  include ::tmpreaper
 
 }
