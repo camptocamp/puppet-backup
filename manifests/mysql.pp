@@ -56,11 +56,10 @@ class backup::mysql(
   }
 
   cron {'mysql-backup':
-    command => "/usr/local/bin/mysql-backup.sh ${mysqldump_retention} > ${backup_dir}/backup-logs-$(date '+%Y-%m-%d') 2&>1",
+    command => "/usr/local/bin/mysql-backup.sh ${mysqldump_retention} 2>&1 | logger -t mysql-backup",
     user    => 'root',
     hour    => $cron_hour,
     minute  => $cron_minute,
     require => [File[$backup_dir], File['/usr/local/bin/mysql-backup.sh']],
   }
-
 }
