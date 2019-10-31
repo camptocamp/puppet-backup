@@ -55,12 +55,23 @@ class backup::mysql(
     mode    => '0555',
   }
 
+  file {"${backup_dir}/logs/":
+    ensure => directory,
+  }
+
   cron {'mysql-backup':
-    command => "/usr/local/bin/mysql-backup.sh ${mysqldump_retention} > ${backup_dir}/backup-logs-$(date '+%Y-%m-%d') 2&>1",
+    command => "/usr/local/bin/mysql-backup.sh ${mysqldump_retention} > ${backup_dir}/logs/backup-logs-$(date '+%Y-%m-%d') 2&>1",
     user    => 'root',
     hour    => $cron_hour,
     minute  => $cron_minute,
     require => [File[$backup_dir], File['/usr/local/bin/mysql-backup.sh']],
+  }
+
+  cron {'mysql backup cleanup':
+    command => "find  ${backup_dir}/logs/ -mtime +5 -exec rm {} \\;",
+    user    => 'root',
+    minute  => '0',
+    hour    => '3',
   }
 
 }

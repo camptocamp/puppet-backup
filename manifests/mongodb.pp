@@ -29,11 +29,21 @@ class backup::mongodb(
     group   => 'root',
     mode    => '0500',
   }
-
+  file{"${backup_dir}/logs":
+    ensure =>  directory,
+  }
   cron {'mongodb backup':
-    command => '/usr/local/bin/mongodb-backup.sh > ${backup_dir}/backup-logs-$(date '+%Y-%m-%d') 2&>1',
+    command => "/usr/local/bin/mongodb-backup.sh > ${backup_dir}/logs/backup-logs-$(date '+%Y-%m-%d') 2&>1",
     user    => 'root',
     minute  => '0',
     hour    => '3',
   }
+
+  cron {'mongodb backup cleanup':
+    command => "find  ${backup_dir}/logs/ -mtime +5 -exec rm {} \\;",
+    user    => 'root',
+    minute  => '0',
+    hour    => '3',
+  }
+
 }
