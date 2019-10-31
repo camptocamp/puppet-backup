@@ -1,6 +1,6 @@
 {
   "name": "camptocamp-backup",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "author": "Camptocamp",
   "summary": "Puppet Backup module",
   "license": "Apache-2.0",
