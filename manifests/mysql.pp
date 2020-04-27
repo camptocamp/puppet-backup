@@ -18,7 +18,7 @@
 #   day of the week.
 #
 class backup::mysql(
-  $data_dir               = $::mysql::server::options['mysqld']['datadir'],
+  $data_dir               = $::mysql::server::_options['mysqld']['datadir'],
   $backup_dir             = '/var/backups/mysql',
   $cron_hour              = '2',
   $cron_minute            = '0',
