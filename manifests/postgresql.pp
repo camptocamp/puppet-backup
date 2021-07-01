@@ -58,6 +58,7 @@ class backup::postgresql (
   $not_databases = [],
   $cron_hour     = 2,
   $cron_minute   = 0,
+  $cron_weekday  = "*",
   $container     = undef,
   $yearly_month  = false
 ) {
@@ -130,6 +131,7 @@ class backup::postgresql (
     user    => $_user,
     hour    => $cron_hour,
     minute  => $cron_minute,
+    weekday => $cron_weekday,
     require => [File['/usr/local/bin/pgsql-backup.sh']],
   }
 
