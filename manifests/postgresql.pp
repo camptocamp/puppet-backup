@@ -40,6 +40,10 @@
 #   Default to false.
 #   More information: http://dba.stackexchange.com/a/30639
 #
+# [*keep_monthly*]
+#   Boolean telling if we keep a monthly dump on the 1st of each month.
+#   Default to true.
+#
 # [*yearly_month*]
 #   Boolean telling we want to suffix monthly backup with year.
 #   Default to false.
@@ -60,6 +64,7 @@ class backup::postgresql (
   $cron_minute   = 0,
   $cron_weekday  = "*",
   $container     = undef,
+  $keep_monthly  = true,
   $yearly_month  = false
 ) {
 
