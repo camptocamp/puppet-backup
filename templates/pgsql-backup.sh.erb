@@ -56,6 +56,7 @@ test -f $BKPDIR/pgsql_$DAY.tar.gz && rm $BKPDIR/pgsql_$DAY.tar.gz
 tar -C $TMPDIR -c -f $BKPDIR/pgsql_$DAY.tar `ls $TMPDIR`
 rm -fr $TMPDIR
 
+<% if @keep_monthly -%>
 if [ $(date +%d) = "01" ]; then
     test -f $BKPDIR/pgsql_$MONTH.tar.gz && rm $BKPDIR/pgsql_$MONTH.tar.gz
     <% if @yearly_month -%>
@@ -64,6 +65,7 @@ if [ $(date +%d) = "01" ]; then
     cp $BKPDIR/pgsql_$DAY.tar $BKPDIR/pgsql_$MONTH.tar
     <% end -%>
 fi
+<% end -%>
 
 # This witness' age will become the age of the last successful backup
 if [ $has_errors -eq 0 ]; then
