@@ -7,7 +7,11 @@ USER="-U <%= @user %>"
 BKPDIR="<%= @backup_dir %>"
 BKPFMT="<%= @backup_format %>"
 TODAY=$(date +%F)
+<% if @keep_daily -%>
 DAY=$(LC_TIME= date +%A |tr 'A-Z' 'a-z')
+<% else -%>
+DAY=daily
+<% end -%>
 MONTH=$(LC_TIME= date +%B |tr 'A-Z' 'a-z')
 YEAR=$(LC_TIME= date +%Y)
 TMPDIR=$(mktemp -d -p $BKPDIR) || exit 1
