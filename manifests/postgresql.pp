@@ -40,6 +40,10 @@
 #   Default to false.
 #   More information: http://dba.stackexchange.com/a/30639
 #
+# [*keep_daily*]
+#   Boolean telling if we keep daily dumps for one week.
+#   Default to true.
+#
 # [*keep_monthly*]
 #   Boolean telling if we keep a monthly dump on the 1st of each month.
 #   Default to true.
@@ -64,6 +68,7 @@ class backup::postgresql (
   $cron_minute   = 0,
   $cron_weekday  = "*",
   $container     = undef,
+  $keep_daily    = true,
   $keep_monthly  = true,
   $yearly_month  = false
 ) {
