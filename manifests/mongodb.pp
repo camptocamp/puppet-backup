@@ -14,11 +14,7 @@ class backup::mongodb(
     ensure =>  $mongo_version,
   }
 
-  file{"${backup_dir}/retention":
-    ensure => directory,
-  }
-
-  file{"${backup_dir}/dump":
+  file { ["${backup_dir}", "${backup_dir}/retention", "${backup_dir}/dump"]:
     ensure => directory,
   }
 
